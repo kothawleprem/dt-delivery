@@ -1,6 +1,10 @@
 const mongoose = require('mongoose') 
 const express = require('express')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const dotenv = require('dotenv')
 const app = express()
+dotenv.config()
 
 const cdata = require('./data.js')
 const Data  = require('./models/dataSchema');
@@ -10,11 +14,16 @@ customer_data = cdata.mydata()
 const DB = 'mongodb+srv://admin:admin@debugthugs.cq8wr.mongodb.net/Delivery?retryWrites=true&w=majority'
 
 
+
 mongoose.connect(DB).then(() => {
   console.log('conn success')
 }).catch((err) => console.log(err))
 
 
+app.use(bodyParser.json({limit:"30mb",extended:true}))
+app.use(bodyParser.urlencoded({limit:"30mb",extended:true}))
+
+app.use(cors())
 
 app.get('/create',(req,res) => {
   const createDocument = async () => {
