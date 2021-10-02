@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const fs = require('fs')
 const { model } = require('mongoose')
+var solver = require('node-tspsolver')
 
 // app.use(express.static(publicDirectoryPath))
 
@@ -13,10 +14,16 @@ const newJSON = JSON.stringify(custData)
 ids = Object.keys(custData)
 const mydata = () => {
     const a = []
+    const ll = []
 for (let i=0;i<ids.length;i++ )
 {
     id = ids[i]
     const b = []
+    
+    const temp = []
+    
+     if(custData[id].customer_address.lat_long['latitude'] != undefined || custData[id].customer_address.lat_long['longitude'] != undefined )
+     {
     b.push(id)
     b.push(custData[id].customer_name)
     b.push(custData[id].customer_address['address_id'])
@@ -31,11 +38,58 @@ for (let i=0;i<ids.length;i++ )
     b.push(custData[id].customer_address['instructions'])
     b.push(custData[id].customer_address['phone_no'])
     b.push(custData[id].visited)
-
+        temp.push(id)
+        temp.push(custData[id].customer_address.lat_long['latitude'])
+        temp.push(custData[id].customer_address.lat_long['longitude'])
+        ll.push(temp)
     a.push(b)
+    }
+    
+
+    
 
 }
-// console.log(a)
+const fl = []
+for(let j=0;j<ll.length;j++)
+{
+    const tempfl = []
+    for(let k=0;k<ll.length;k++)
+    {
+        lon1 =  ll[j][0] * Math.PI / 180;
+        lon2 = ll[k][0] * Math.PI / 180;
+        lat1 = ll[j][1] * Math.PI / 180;
+        lat2 = ll[k][1] * Math.PI / 180;
+
+        
+        let dlon = lon2 - lon1;
+        let dlat = lat2 - lat1;
+        let a = Math.pow(Math.sin(dlat / 2), 2)
+                 + Math.cos(lat1) * Math.cos(lat2)
+                 * Math.pow(Math.sin(dlon / 2),2);
+               
+        let c = 2 * Math.asin(Math.sqrt(a));
+   
+        // Radius of earth in kilometers. Use 3956
+        // for miles
+        let r = 6371;
+        tempfl.push(c*r)
+    }
+    fl.push(tempfl)
+}
+
+
+
+const fsolver = async () => {
+    const rest = await solver.solveTsp(fl, true, {})
+    // console.log(rest)
+    
+    for(let z=0;z<a.length;z++)
+    {
+        a[z].push(rest[z]+1)
+    }
+}
+
+fsolver()
 return a
 }
 

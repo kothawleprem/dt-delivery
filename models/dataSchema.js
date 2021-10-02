@@ -14,9 +14,8 @@ const dataSchema = new mongoose.Schema({
       googleAddressData:String,
       instructions:String,
       phoneNo:Number,
-      visited:Boolean
-
-
+      visited:Boolean,
+      rank:Number
 })
 
 //collection creation

@@ -44,10 +44,11 @@ app.get('/create',(req,res) => {
           googleAddressData:customer_data[i][10],
           instructions:customer_data[i][11],
           phoneNo:customer_data[i][12],
-          visited:customer_data[i][13]
+          visited:customer_data[i][13],
+          rank:customer_data[i][14]
       })
       const result = await taskData.save()
-      console.log(result)
+      // console.log(result)
     }
     
   }catch(err)
@@ -63,7 +64,7 @@ app.get('/create',(req,res) => {
 app.get('/read',(req,res) =>{
   const getDocument = async () => {
       const result = await Data.find()
-      console.log(result)
+      // console.log(result)
       res.json(result)
   }
   getDocument()

@@ -15,6 +15,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongoose": "^6.0.8",
+    "node-tspsolver": "^1.0.2",
     "require": "^2.4.20"
   }
 }
